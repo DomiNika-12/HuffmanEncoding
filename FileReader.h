@@ -2,7 +2,9 @@
 // Created by Dominika Bobik on 11/2/22.
 //
 #include <iostream>
+#include <vector>
 #include <fstream>
+#include "Node.h"
 
 using namespace std;
 
@@ -11,13 +13,14 @@ using namespace std;
 
 class FileReader {
 public:
-    struct NODE {
-            char c;
-            int iFrequency;
-    };
-    FileReader();
-    void WriteFile(char* pcFileName);
-    int ReadFile(char *pcFileName, struct NODE **nppFrequencyArray, int* piCharCount);
+    char* pcFileContentsBuffer;
+    int iFileContentsBufferSize;
+    int iCharCount;
+    char* pcInputFileName;
+    char* pcOutputFileName;
+    FileReader(char* pcInputFileName, char* pcOutputFileName);
+    void WriteFile();
+    int ReadFile(int* piDistinctCharCount, vector<Node>* pVector);
 };
 
 
