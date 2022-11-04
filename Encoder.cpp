@@ -4,7 +4,6 @@
 
 #include "Encoder.h"
 
-
 Encoder::Encoder(int iCharCount) {
     this->iCharCount = iCharCount;
 }

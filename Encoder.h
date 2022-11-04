@@ -16,7 +16,6 @@ using namespace std;
 class Encoder {
 private:
     int iCharCount;
-    //struct CharEncoding* pEncodings;
     vector<CharEncoding> Encodings{};
 public:
     Encoder(int iCharCount);
@@ -26,7 +25,6 @@ public:
     void GenerateTree(priority_queue<Node, std::vector<Node>, CompareNodes>* pPQ, Node* pNode);
     void GenerateEncoding(Node* pRoot, int array[], int top);
     vector<CharEncoding> GetEncodings();
-    void GenerateEncodedBuffer();
 };
 
 #endif //HUFFMANENCODING_ENCODER_H

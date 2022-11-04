@@ -3,12 +3,14 @@
 #include "FileReader.h"
 #include "Encoder.h"
 #include "Node.h"
+#include "Decoder.h"
 
 int main() {
     FileReader* Reader = nullptr;
     Node* npFrequencyArray = nullptr;
     Node* pRoot = nullptr;
     Encoder* pEncoder = nullptr;
+    Decoder* pDecoder = nullptr;
     std::vector<Node> vector{};
     std::priority_queue<Node, std::vector<Node>, CompareNodes> queue;
     int iCharCount = 0;
@@ -17,14 +19,6 @@ int main() {
     Reader = new FileReader("test.txt", "out.txt");
     //Eerie eyes seen near lake.
     Reader->ReadFile(&iCharCount, &vector);
-
-//    while (i != iCharCount)
-//    {
-//        printf("Char: %c Frequency: %d\n", vector.at(i).c, vector.at(i).iFrequency);
-//        i++;
-//    }
-
-
 
     pEncoder = new Encoder(iCharCount);
     pRoot = new Node();
@@ -55,7 +49,12 @@ int main() {
         cout << endl;
     }
 
+    char* b = "110001001010101011010011101110111101001011000111001100011010100111001101110000001011011011000010011110100111110111111000010111011011100111010110011010111011001000111100";
+    int o = 0;
     Reader->WriteFile(&e);
+    pDecoder = new Decoder(pRoot);
+    pDecoder->Decode(pRoot, b, o, strlen(b));
+
 
     return 0;
 }
