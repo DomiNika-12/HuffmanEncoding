@@ -6,16 +6,13 @@
 #define HUFFMANENCODING_NODE_H
 
 
+
 class Node {
 public:
     char c;
     int iFrequency;
     Node* leftNode;
     Node* rightNode;
-    bool operator<(const Node& b) const
-    {
-        return iFrequency > b.iFrequency;
-    }
     Node();
 };
 

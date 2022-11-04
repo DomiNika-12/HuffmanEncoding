@@ -5,6 +5,7 @@
 #include <vector>
 #include <fstream>
 #include "Node.h"
+#include "Types.h"
 
 using namespace std;
 
@@ -19,8 +20,9 @@ public:
     char* pcInputFileName;
     char* pcOutputFileName;
     FileReader(char* pcInputFileName, char* pcOutputFileName);
-    void WriteFile();
     int ReadFile(int* piDistinctCharCount, vector<Node>* pVector);
+    int WriteFile(vector<CharEncoding>* pEncodings);
+
 };
 
 

@@ -19,14 +19,14 @@ void Encoder::Sort(vector<Node> *pVector)
     sort((*pVector).begin(), (*pVector).end(), &(Encoder::cmp));
 }
 
-void Encoder::GeneratePQ(vector<Node> *pVector, priority_queue<Node> *pPQ) {
+void Encoder::GeneratePQ(vector<Node>* pVector, std::priority_queue<Node, std::vector<Node>, CompareNodes>* pPQ) {
     for (int i = 0; i < iCharCount; i++)
     {
         (*pPQ).push( (*pVector).at(i));
     }
 }
 
-void Encoder::GenerateTree(priority_queue<Node> *pPQ, Node *pNode) {
+void Encoder::GenerateTree(priority_queue<Node, std::vector<Node>, CompareNodes>* pPQ, Node* pNode) {
     while ((*pPQ).size() != 1)
     {
         auto* n1 = new Node();
@@ -56,11 +56,18 @@ void Encoder::GenerateEncoding (Node* npRoot, int arr[], int top) {
     }
 
     if (!npRoot->leftNode && !npRoot->rightNode) {
-        cout << npRoot->c << " ";
+        auto* e = (CharEncoding*) malloc(sizeof(CharEncoding));
+        e->iArraySize = 0;
+        e->c = npRoot->c;
         for (int i = 0; i < top; i++) {
-            cout << arr[i];
+            e->array[i] = arr[i];
+            e->iArraySize++;
         }
-        cout << endl;
+        Encodings.push_back(*e);
     }
+}
+
+vector<CharEncoding> Encoder::GetEncodings() {
+    return Encodings;
 }
 

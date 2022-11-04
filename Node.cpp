@@ -10,3 +10,4 @@ Node::Node() {
     leftNode = nullptr;
     rightNode = nullptr;
 }
+

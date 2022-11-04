@@ -20,7 +20,6 @@ int FileReader::ReadFile(int* piDistinctCharCount, vector<Node>* pVector) {
     bool bFound = false;
 
     FILE* ptr = fopen(pcInputFileName, "r");
-
     if (ptr == nullptr)
     {
         cerr << "Can't open input file!";
@@ -72,8 +71,43 @@ int FileReader::ReadFile(int* piDistinctCharCount, vector<Node>* pVector) {
     return iError;
 }
 
-void FileReader::WriteFile() {
+int FileReader::WriteFile(vector<CharEncoding> *pEncodings) {
+    int iError = 0;
+    FILE* ptr = nullptr;
+    char c = '\0';
 
+    ptr = fopen(pcOutputFileName, "w");
+    if (ptr == nullptr)
+    {
+        cerr << "Can't create file!";
+        iError = errno;
+        return iError;
+    }
+
+    for (int i = 0; i < iCharCount; i++)
+    {
+        c = pcFileContentsBuffer[i];
+        int j = 0;
+        while(1)
+        {
+            if (c == '\0')
+            {
+                fprintf(ptr, "%c", c);
+                break;
+            }
+            if (pEncodings->at(j).c == c)
+            {
+                for (int k = 0; k < pEncodings->at(j).iArraySize; k++)
+                {
+                    fprintf(ptr, "%d", pEncodings->at(j).array[k]);
+                }
+                break;
+            }
+            j++;
+        }
+    }
+
+    return iError;
 }
 
 
