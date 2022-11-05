@@ -13,16 +13,23 @@ using namespace std;
 #define HUFFMANENCODING_FILEREADER_H
 
 class FileReader {
+private:
+    void WriteBuffer(FILE* pFile, int* ipByteCounter, uint8_t* ipByteBuffer);
 public:
     char* pcFileContentsBuffer;
     int iFileContentsBufferSize;
+    char* pcEncodedBuffer;
+    int iEncodedBufferSize;
     int iCharCount;
     char* pcInputFileName;
     char* pcOutputFileName;
     FileReader(char* pcInputFileName, char* pcOutputFileName);
     int ReadFile(int* piDistinctCharCount, vector<Node>* pVector);
     int WriteFile(vector<CharEncoding>* pEncodings);
-
+    char* GetEncodedBuffer();
+    int GetEncodedBufferSize();
+    int GetInputFileSize();
+    int GetOutputFileSize();
 };
 
 

@@ -7,6 +7,7 @@
 FileReader::FileReader(char* pcInputFileName, char* pcOutputFileName) {
     iFileContentsBufferSize = 10;
     pcFileContentsBuffer = (char*)malloc(iFileContentsBufferSize*sizeof(char));
+    pcEncodedBuffer = nullptr;
     iCharCount = 0;
     this->pcInputFileName = pcInputFileName;
     this->pcOutputFileName = pcOutputFileName;
@@ -71,10 +72,29 @@ int FileReader::ReadFile(int* piDistinctCharCount, vector<Node>* pVector) {
     return iError;
 }
 
-int FileReader::WriteFile(vector<CharEncoding> *pEncodings) {
+void FileReader::WriteBuffer(FILE* pFile, int* ipByteCounter, uint8_t* ipByteBuffer)
+{
+    if (*ipByteCounter < 8)
+    {
+        while(*ipByteCounter > 0)
+        {
+            *ipByteBuffer = *ipByteBuffer << 0;
+            *ipByteCounter--;
+        }
+    }
+    fprintf(pFile, "%hhu", *ipByteBuffer);
+    *ipByteBuffer = 0;
+    *ipByteCounter = 0;
+}
+
+int FileReader::WriteFile(vector<CharEncoding> *pEncodings)
+{
     int iError = 0;
     FILE* ptr = nullptr;
     char c = '\0';
+    int counter = 0;
+    int iByteCounter = 0;
+    uint8_t iByteBuffer = 0;
 
     ptr = fopen(pcOutputFileName, "w");
     if (ptr == nullptr)
@@ -84,7 +104,9 @@ int FileReader::WriteFile(vector<CharEncoding> *pEncodings) {
         return iError;
     }
 
-    for (int i = 0; i < iCharCount; i++)
+    pcEncodedBuffer = (char*) malloc(sizeof(int) * iCharCount * 5);
+
+    for (int i = 0; i <= iCharCount; i++)
     {
         c = pcFileContentsBuffer[i];
         int j = 0;
@@ -92,22 +114,54 @@ int FileReader::WriteFile(vector<CharEncoding> *pEncodings) {
         {
             if (c == '\0')
             {
-                fprintf(ptr, "%c", c);
+                pcEncodedBuffer[counter] =  '\0';
+                counter++;
+                WriteBuffer(ptr, &iByteCounter, &iByteBuffer);
                 break;
             }
             if (pEncodings->at(j).c == c)
             {
                 for (int k = 0; k < pEncodings->at(j).iArraySize; k++)
                 {
-                    fprintf(ptr, "%d", pEncodings->at(j).array[k]);
+                    int intToWrite = pEncodings->at(j).array[k];
+                    pcEncodedBuffer[counter] = intToWrite + 48;
+                    counter++;
+
+                    if (!intToWrite)
+                    {
+                        iByteBuffer |= (0<<iByteCounter);
+                    } else {
+                        iByteBuffer |= (1<<iByteCounter);
+                    }
+                    iByteCounter++;
+                    if (iByteCounter == 8)
+                    {
+                        WriteBuffer(ptr, &iByteCounter, &iByteBuffer);
+                    }
                 }
                 break;
             }
             j++;
         }
     }
-
+    iEncodedBufferSize = counter;
     return iError;
+}
+
+char *FileReader::GetEncodedBuffer() {
+    return pcEncodedBuffer;
+}
+
+int FileReader::GetEncodedBufferSize() {
+    return iEncodedBufferSize;
+}
+
+int FileReader::GetInputFileSize() {
+    return (iFileContentsBufferSize * sizeof(char)* 8);
+}
+
+int FileReader::GetOutputFileSize() {
+    return iEncodedBufferSize;
 }
 
 
